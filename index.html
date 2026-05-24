@@ -1,27 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Multiverse</title>
-    <link rel="stylesheet" href="style.css">
+  <title>My IP Info 🌍</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="stars"></div>
-
-<h1 class="title">🌌 Choose Your Universe</h1>
-
-<div class="container">
-
-    <button onclick="openUniverse(1)">🌍 Just Friends</button>
-    <button onclick="openUniverse(2)">🌙 Never Met</button>
-    <button onclick="openUniverse(3)">💫 Something More</button>
-
+<div class="card">
+  <h2>🌐 Your IP Info</h2>
+  <p id="country">Country: loading...</p>
+  <p id="city">City: loading...</p>
+  <p id="coords">Coordinates: loading...</p>
 </div>
 
-<p id="story"></p>
+<script>
+fetch('http://ip-api.com/json/')
+  .then(response => response.json())
+  .then(data => {
+    if(data.status === 'success') {
+      document.getElementById("country").innerText = "Country: " + data.country;
+      document.getElementById("city").innerText = "City: " + data.city;
+      document.getElementById("coords").innerText =
+        "Lat/Lon: " + data.lat + ", " + data.lon;
+    } else {
+      document.body.innerHTML = "❌ Failed to get location";
+    }
+  })
+  .catch(error => {
+    document.body.innerHTML = "⚠️ Error: " + error;
+  });
+</script>
 
-<div id="final"></div>
-
-<script src="script.js"></script>
 </body>
 </html>
