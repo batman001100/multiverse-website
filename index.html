@@ -1,55 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My IP Info 🌍</title>
+  <title>Distance Between Us 💞</title>
   <style>
     body {
       font-family: Arial;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      text-align: center;
+      background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+      color: #222;
+      padding-top: 80px;
     }
-    .card {
-      background: #1e293b;
+    .box {
+      background: white;
       padding: 20px;
-      border-radius: 12px;
-      width: 300px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      border-radius: 15px;
+      display: inline-block;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
-    h2 {
-      margin-bottom: 10px;
-    }
+    h1 { font-size: 28px; }
   </style>
 </head>
-
 <body>
 
-<div class="card">
-  <h2>🌐 Your IP Info</h2>
-  <p id="country">Country: loading...</p>
-  <p id="city">City: loading...</p>
-  <p id="coords">Coordinates: loading...</p>
-</div>
+  <div class="box">
+    <h1>💞 Distance Between Us</h1>
+    <p id="status">Detecting location...</p>
+    <h2 id="output"></h2>
+  </div>
 
 <script>
-fetch('http://ip-api.com/json/')
-  .then(response => response.json())
-  .then(data => {
-    if(data.status === 'success') {
-      document.getElementById("country").innerText = "Country: " + data.country;
-      document.getElementById("city").innerText = "City: " + data.city;
-      document.getElementById("coords").innerText =
-        "Lat/Lon: " + data.lat + ", " + data.lon;
-    } else {
-      document.body.innerHTML = "❌ Failed to get location";
-    }
-  })
-  .catch(error => {
-    document.body.innerHTML = "⚠️ Error: " + error;
-  });
+let lat1, lon1;
+
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  return R * c;
+}
+
+// USER 1 location
+navigator.geolocation.getCurrentPosition(pos => {
+  lat1 = pos.coords.latitude;
+  lon1 = pos.coords.longitude;
+
+  document.getElementById("status").innerText = "Location captured ❤️";
+
+  // 👉 Simulate second person (replace later with API/user share link)
+  let lat2 = lat1 + 0.5;
+  let lon2 = lon1 + 0.5;
+
+  let dist = getDistance(lat1, lon1, lat2, lon2);
+
+  document.getElementById("output").innerText =
+    `You are ${dist.toFixed(2)} km away 💔`;
+});
 </script>
 
 </body>
