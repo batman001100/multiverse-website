@@ -2,20 +2,26 @@
 <html>
 <head>
     <title>Multiverse</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🌌 Choose Your Universe</h1>
+<div class="stars"></div>
 
-<button onclick="showText()">Click Me</button>
+<h1 class="title">🌌 Choose Your Universe</h1>
 
-<p id="text"></p>
+<div class="container">
 
-<script>
-function showText() {
-    document.getElementById("text").innerHTML = "Welcome to my universe 💫";
-}
-</script>
-<h1>HELLO TEST</h1>
+    <button onclick="openUniverse(1)">🌍 Just Friends</button>
+    <button onclick="openUniverse(2)">🌙 Never Met</button>
+    <button onclick="openUniverse(3)">💫 Something More</button>
+
+</div>
+
+<p id="story"></p>
+
+<div id="final"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
