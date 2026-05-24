@@ -1,38 +1,51 @@
-function openUniverse(choice) {
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
 
-    let text = "";
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
 
-    if (choice === 1) {
-        text = "We stayed just friends... safe, but something always felt missing.";
-    }
-    else if (choice === 2) {
-        text = "We never met... and that universe feels strangely empty.";
-    }
-    else {
-        text = "Out of all universes... this one feels the most real 💫";
-    }
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-    typeText(text);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    setTimeout(() => {
-        document.getElementById("final").innerHTML =
-            "✨ Maybe some universes are not chosen... they are felt.";
-    }, 4000);
+  return R * c;
 }
 
-function typeText(text) {
+const status = document.getElementById("status");
+const output = document.getElementById("distance");
 
-    let i = 0;
-    document.getElementById("story").innerHTML = "";
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat1 = pos.coords.latitude;
+      const lon1 = pos.coords.longitude;
 
-    let interval = setInterval(() => {
+      status.innerText = "Location captured ❤️";
 
-        document.getElementById("story").innerHTML += text.charAt(i);
-        i++;
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
 
-        if (i >= text.length) {
-            clearInterval(interval);
-        }
+        const lat2 = data.latitude;
+        const lon2 = data.longitude;
 
-    }, 40);
+        const dist = calculateDistance(lat1, lon1, lat2, lon2);
+
+        output.innerText = `${dist.toFixed(2)} km away 💔`;
+
+      } catch (err) {
+        status.innerText = "API error 😢";
+        console.error(err);
+      }
+    },
+    () => {
+      status.innerText = "Location permission denied 🚫";
+    }
+  );
+} else {
+  status.innerText = "Geolocation not supported";
 }
